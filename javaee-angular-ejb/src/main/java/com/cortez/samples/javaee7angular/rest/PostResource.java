@@ -1,8 +1,7 @@
 package com.cortez.samples.javaee7angular.rest;
 
-import com.cortez.samples.javaee7angular.data.Person;
 import com.cortez.samples.javaee7angular.data.Post;
-import com.cortez.samples.javaee7angular.pagination.PaginatedListWrapper;
+import com.cortez.samples.javaee7angular.data.Category;
 import com.cortez.samples.javaee7angular.pagination.PaginatedPostListWrapper;
 
 import javax.ejb.Stateless;
@@ -54,7 +53,7 @@ public class PostResource extends Application {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public PaginatedPostListWrapper listPersons(@DefaultValue("1")
+    public PaginatedPostListWrapper listPosts(@DefaultValue("1")
                                             @QueryParam("page")
                                             Integer page,
                                             @DefaultValue("id")
@@ -62,13 +61,39 @@ public class PostResource extends Application {
                                             String sortFields,
                                             @DefaultValue("asc")
                                             @QueryParam("sortDirections")
-                                            String sortDirections) {
+                                            String sortDirections,
+                                            @DefaultValue("all")
+                                            @QueryParam("show")
+    										String show) {
+    	System.out.println(show + "---------------------------------------------------------");
+    	if (show.equals("all")) {
     	PaginatedPostListWrapper paginatedPostListWrapper = new PaginatedPostListWrapper();
     	paginatedPostListWrapper.setCurrentPage(page);
     	paginatedPostListWrapper.setSortFields(sortFields);
     	paginatedPostListWrapper.setSortDirections(sortDirections);
     	paginatedPostListWrapper.setPageSize(10);
         return findPosts(paginatedPostListWrapper);
+    	}
+    	else {
+        	//refer to http://stackoverflow.com/questions/17991943/sqlite-how-to-select-first-n-row-of-each-group
+    		/*
+        	String queryStr = ""
+        	+	"SELECT p FROM Post p join Category c on p.categoryId = c.id "
+    		+	"where (select count(*) as ct from Post p2 "
+    		+	       "where p2.id <= p.id and p2.categoryId = p.categoryId) <= 2";
+        	*/
+    		//hibernate does not support join, so use the following alternative instead
+        	String queryStr = ""
+        	+	"SELECT p FROM Post p, Category c where p.categoryId = c.id and "
+    		+	"(select count(*) from Post p2 "
+    		+	       "where p2.id >= p.id and p2.categoryId = p.categoryId) <= 2 order by p.categoryId";
+        	System.out.println(queryStr + "--------------------------=====-------------------------------");
+            Query query = entityManager.createQuery(queryStr);
+        	System.out.println("-------===-------" + query.getResultList().size());
+        	PaginatedPostListWrapper postListWrapper = new PaginatedPostListWrapper();
+        	postListWrapper.setList(query.getResultList());
+            return postListWrapper;    		
+    	}
     }
 
     @GET
@@ -102,5 +127,21 @@ public class PostResource extends Application {
     @Path("{id}")
     public void deletePost(@PathParam("id") Long id) {
         entityManager.remove(getPost(id));
+    }
+    
+    @SuppressWarnings("unchecked")
+	@GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public PaginatedPostListWrapper listTopNPosts() {
+    	//refer to http://stackoverflow.com/questions/17991943/sqlite-how-to-select-first-n-row-of-each-group
+    	String queryStr = ""
+    	+	"SELECT * FROM Post p join Category c on p.categoryId = c.id"
+		+	"where (select count(*) from Post p2"
+		+	       "where p2.id <= p.id and p2.categoryId = p.categoryId) <= 2;";
+        Query query = entityManager.createQuery(queryStr);
+    	PaginatedPostListWrapper postListWrapper = new PaginatedPostListWrapper();
+    	postListWrapper.setList(query.getResultList());
+    	System.out.println("--------------" + query.getResultList().size());
+        return findPosts(postListWrapper);
     }
 }
