@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+ <display-name>Project Management</display-name>
+
+ <security-constraint>
+  <display-name>Main</display-name>
+  <web-resource-collection>
+   <web-resource-name>restful</web-resource-name>
+   <!-- <url-pattern>/resources/*</url-pattern> -->
+   <url-pattern>/resources/users/*</url-pattern>
+   <!-- 
+   <http-method>GET</http-method>
+   <http-method>POST</http-method>
+   <http-method>DELETE</http-method>
+   <http-method>PUT</http-method>
+   <http-method>OPTIONS</http-method>
+   -->
+  </web-resource-collection>
+  
+	<user-data-constraint>
+		<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+	</user-data-constraint>
+	
+ </security-constraint>
+  
+</web-app>

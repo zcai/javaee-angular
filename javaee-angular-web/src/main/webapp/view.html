@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!-- Declares the root element that allows behaviour to be modified through Angular custom HTML tags. -->
+<html>
+<head>
+    <title>javaee7-angular-post</title>
+
+    <!-- build:css css/third-party.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="lib/dependencies/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/dependencies/css/ng-grid.min.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css css/application.css -->
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <!-- endbuild -->
+
+    <!-- build:js lib/third-party.js -->
+    <!-- bower:js -->
+    <script src="lib/dependencies/jquery.min.js"></script>
+	<script src="lib/dependencies/angular.js"></script>
+   
+    <script src="lib/dependencies/angular-resource.min.js"></script>
+    <script src="lib/dependencies/ng-grid-2.0.11.min.js"></script>
+    <script src="lib/dependencies/ui-bootstrap-tpls.min.js"></script>
+    <script src="https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.2.0/textAngular-sanitize.min.js" type="text/javascript"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.2.0/textAngular.min.js" type="text/javascript"></script>
+	<!-- 
+    <script src="lib/dependencies/ngStorage.js"></script>
+    <script src="lib/dependencies/textAngular-sanitize.min.js"></script>
+    <script src="lib/dependencies/textAngular.min.js"></script>
+	-->
+
+
+    <!-- build:js script/all.js -->
+    <script src="script/login.js"></script>
+    <script src="script/view.js"></script>
+    <script src="script/customfilter.js"></script>
+    <!-- endbuild -->
+    <script> 
+
+    </script> 
+    <style>
+		.gridStyle {
+		    border: 0px solid rgb(212,212,212);
+		    width: 900px;
+		    
+		} 
+
+		* {
+			margin-top: 0;
+			margin-left: auto;
+			margin-right: auto;
+		}
+			
+		.ngRow.odd {
+		  background-color: transparent;
+		  border-bottom: thin dashed grey;
+		}
+		.ngRow.even {
+		  background-color: transparent;
+		  border-bottom: thin dashed grey;
+		}
+		.ngGrid {
+		  background-color: transparent;
+		}
+
+
+<!-- refer to http://codepen.io/haki/pen/kIdft -->
+h1,h2,h3 { 
+  //font-family: 'Source Sans Pro', sans-serif!important;
+  font-family: 'Roboto Slab', serif!important;
+}
+
+
+.ta-editor {
+  min-height: 300px;
+  height: auto;
+  overflow: auto;
+  font-family: inherit;
+  font-size: 100%;
+  margin:20px 0;
+  box-shdaow : none!important;
+}
+
+.ta-toolbar .btn {
+  border-radius : 0;
+  padding : 5px;
+  min-width : 30px;
+  background-color : #fff;
+  color : #333;
+}
+[text-angular] { 
+  position : relative;
+}
+.ta-toolbar { 
+  position : absolute ;
+  top : 0;
+  right : 0;
+}
+@media all and (max-width: 699px) {
+  .ta-toolbar { position : absolute; }
+  .ta-editor { padding-top : 30px; }
+}
+
+@media all and (max-width: 250px) {
+  .ta-toolbar { display : none; }
+}
+.ta-toolbar .btn-group { 
+  margin : 0!important;
+  //box-shadow : 0 1px 3px rgba(0,0,0,0.2);
+}
+.ta-editor {
+  border :1px solid #EEE;
+  border-raidus : 3px!important;
+}		   
+    </style>
+    <!-- must have the following two lines, otherwise the toolbar of textAngular will show incompletely-->
+	<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css'>
+	<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css'>
+</head>
+
+<body ng-app="rootApp">
+<div ng-include="'header.html'"></div>
+<table>
+<tr>
+<td>
+
+
+</td>
+</tr>
+</table>
+
+<table id='bottom' style="width:1200px;" border="0">
+	<tr>
+		<td style="width:900px;padding: 0px;margin:0px;vertical-align:top;">
+			<!-- Specify a Angular controller script that binds Javascript variables to the grid.-->
+			<div style="border: 0px solid rgb(212,212,212);width: 900px;" ng-controller="postsViewController">
+			    <div>
+			        <h3>List Posts</h3>
+			    </div>
+			    <table style="width:100%;" border="0">
+			    	<tr ng-repeat="post in posts.list" style="border-bottom: 1px dashed grey;">
+			    		<td style="text-align:left;">
+			    			<div id="{{post.id}}_title" style="font-family: Times New Roman; font-size: 24px; color: #140840">{{post.title}}</div>
+			    			<div>By {{post.userId}}</div>
+			    			<div ng-show="contentVisibility">{{post.content}}</div>
+			    			<div ng-hide="contentVisibility">{{post.content | cut:true:100:' ...'}}</div>
+			    			<table id="{{post.id}}_operation" style="width:100%;" border="0">
+			    				<tr>
+			    					<td style="width:100px;">
+			    						<div style="cursor:pointer;" ng-show="contentVisibility"><a ng-click="contentVisibility = ! contentVisibility;scrollTo(post.id+'_title');">hide full text</a></div>
+			    						<div style="cursor:pointer;" ng-hide="contentVisibility"><a ng-click="contentVisibility = ! contentVisibility;scrollTo(post.id+'_title');">view full text</a></div>
+			    					</td>
+			    					<td style="width:120px;">
+			    						<!-- <div><a href="#" ng-click="scrollTo(post.id+'_commentform');selectedPost(post.id);">write comment</a></div> -->
+			    						<!-- must delete href=#" to make scroll work -->
+			    						<div><a style="cursor:pointer;" ng-click="scrollTo(post.id+'_commentform');selectedPost(post.id);">write comment</a></div>
+			    					</td>
+			    					<td>
+			    						<div ng-hide="commentVisibility"><a style="cursor:pointer;" ng-click="viewComments(post.id);commentVisibility = ! commentVisibility;scrollTo(post.id+'_operation');">view comments({{postId2CommentCount[post.id]}})</a></div>
+			    						<div ng-show="commentVisibility"><a style="cursor:pointer;" ng-click="hideComments(post.id);commentVisibility = ! commentVisibility">hide comments</a></div>
+			    					</td>
+			    				</tr>
+			    			</table>
+							<!-- show comments here -->
+							<div id="{{post.id}}" style="width:100%;"></div>
+					        <form id="{{post.id}}_commentform" ng-show="commentFormVisibility[post.id]" name="commentForm" ng-submit="addComment()" novalidate>				
+					            <div class="form-group" ng-class="{'has-error' : commentForm.content.$invalid && commentForm.content.$dirty}">
+					                <span ng-class="{'glyphicon glyphicon-ok' : commentForm.content.$valid && commentForm.content.$dirty}"></span>
+									<input type="hidden" ng-model="comment.postId"/><br/>
+									<!-- 
+					                <textarea id="content" name="content" ng-model="comment.content" style="width:100%; height: 350px;"></textarea>
+					                <p class="help-block" ng-show="commentForm.content.$error.required">Add Content.</p>
+					                <p class="help-block" ng-show="commentForm.content.$error.minlength">Content must be at least 5 characters long.</p>
+					                <p class="help-block" ng-show="commentForm.content.$error.maxlength">Content cannot be longer than 100 characters.</p>
+					            	-->
+					            </div>
+					            <div text-angular ng-model="comment.content" ta-toolbar="[['bold','underline','italics','undo','redo', 'quote','p','pre','ul','ol', 'insertImage','insertLink','unlink']]"></div>
+					            <div class="buttons">
+					                <button type="submit" class="btn btn-primary" ng-disabled="commentForm.$invalid" ng-click="commentFormVisibility[post.id] = ! commentFormVisibility[post.id]">Save</button>
+					                <button type="button" class="btn btn-primary" ng-disabled="commentForm.$invalid" ng-click="commentFormVisibility[post.id] = ! commentFormVisibility[post.id]">Cancel</button>
+					            </div>
+					        </form>
+
+			    			<br/>
+			    		</td>
+			    	</tr>
+			    </table>
+			
+			    <!--  Bind the pagination component to be displayed. -->
+			    <pagination direction-links="true" boundary-links="true"
+			                total-items="posts.totalResults" items-per-page="posts.pageSize"
+			                ng-model="posts.currentPage" ng-change="refreshGrid()">
+			    </pagination>
+
+			</div>
+
+		</td>
+		<td style="width:300px;padding: 0px;margin:0px;">
+
+		</td>
+	</tr>
+</table>
+
+
+
+<div id='bottom2'>xxxxxxxxx</div>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+  <p>...</p>
+</body>
+</html>

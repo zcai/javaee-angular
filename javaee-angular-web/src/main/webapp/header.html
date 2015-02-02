@@ -1,0 +1,81 @@
+<!-- refer to http://stackoverflow.com/questions/18935476/angularjs-ui-modal-forms -->
+<div ng-controller="loginCtrl">
+    <script type="text/ng-template" id="loginmodal">
+        <div class="modal-header"></div>
+        <div class="modal-body">
+        <form ng-submit="submit()">
+			<table><tr><td style="height:30px;">
+            <label>User ID</label>
+			</td><td >
+            <input type="text" ng-model="user.userId" />
+			</td></tr><tr><td style="height:30px;">
+            <label>Password</label>
+			</td>
+			<td>
+            <input type="password" ng-model="user.password" />
+			</td></tr>
+			<tr><td></td>
+			<td>
+              <input type="submit" class="btn primary-btn" value="Submit" />
+              <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+			</td>
+			</table>
+        </form>
+
+        </div>
+          <div class="modal-footer">
+				<a style="cursor:pointer;" ng-click="signup()">Become a member</a>
+          </div>
+    </script>
+    <script type="text/ng-template" id="signupmodal">
+        <div class="modal-header">
+		</div>
+        <div class="modal-body">
+        <form ng-submit="submit()">
+			<table><tr><td style="height:30px;">
+            <label>User ID</label>
+			</td><td>
+            <input type="text" ng-model="user.userId" />
+			</td></tr><tr><td style="height:30px;">
+            <label>Password</label>
+			</td>
+			<td>
+            <input type="password" ng-model="user.password" />
+			</td></tr>
+			<tr><td style="height:30px;">
+            <label>Password Again</label>
+			</td>
+			<td>
+            <input type="password" ng-model="user.password" />
+			</td></tr>
+			<tr><td></td>
+			<td>
+              <input type="submit" class="btn primary-btn" value="Submit" />
+              <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+			</td>
+			</table>
+        </form>
+
+        </div>
+          <div class="modal-footer">
+          </div>
+    </script>
+    <!-- 
+    <button class="btn" ng-click="login()">login</button>
+    <button class="btn" ng-click="logout()">logout</button>
+    -->
+    <table style="width:1200px;" border="1">
+		<tr>
+			<td style="text-align:right;"><a style="cursor:pointer;" ng-click="login()">login</a><a style="cursor:pointer;" ng-click="logout()">logout</a><a style="cursor:pointer;" ng-click="signup()">Sign up</a></td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+    </table>   
+    
+</div>
+<div ng-controller="categoryCtrl">
+<li ng-repeat="category in categories.list">
+{{category.categoryName}}
+</li>
+</div>

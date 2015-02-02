@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!-- Declares the root element that allows behaviour to be modified through Angular custom HTML tags. -->
+<html ng-app="posts">
+<head>
+    <title>javaee7-angular-post</title>
+
+    <!-- build:css css/third-party.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="lib/dependencies/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/dependencies/css/ng-grid.min.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css css/application.css -->
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <!-- endbuild -->
+
+    <!-- build:js lib/third-party.js -->
+    <!-- bower:js -->
+    <script src="lib/dependencies/jquery.min.js"></script>
+    <script src="lib/dependencies/angular.min.js"></script>
+    <script src="lib/dependencies/angular-resource.min.js"></script>
+    <script src="lib/dependencies/ng-grid-2.0.11.min.js"></script>
+    <script src="lib/dependencies/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="lib/dependencies/ng-grid-flexible-height.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js script/all.js -->
+    <script src="script/post.js"></script>
+    <!-- endbuild -->
+    
+    <style>
+		.gridStyle {
+		    border: 0px solid rgb(212,212,212);
+		    width: 900px;
+		    
+		} 
+
+* {
+	margin-top: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+	
+.ngRow.odd {
+  background-color: transparent;
+  border-bottom: thin dashed grey;
+}
+.ngRow.even {
+  background-color: transparent;
+  border-bottom: thin dashed grey;
+}
+.ngGrid {
+  background-color: transparent;
+}	   
+    </style>
+</head>
+
+<body>
+<table>
+<tr>
+<td>
+<h1>Java EE - Angular Application</h1>
+
+<br/>
+
+<!-- Specify a Angular controller script that binds Javascript variables to the feedback messages.-->
+<div class="message" ng-controller="alertMessagesController">
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+</div>
+</td>
+</tr>
+</table>
+
+<table style="width:1200px;" border="0">
+	<tr>
+		<td style="width:900px;padding: 0px;margin:0px;vertical-align:top;">
+			<!-- Specify a Angular controller script that binds Javascript variables to the grid.-->
+			<div style="border: 0px solid rgb(212,212,212);width: 900px;" ng-controller="postsListController">
+			    <div>
+			        <h3>List Posts</h3>
+			    </div>
+			
+			    <!-- Binds the grid component to be displayed. -->
+			    <div class="gridStyle" ng-grid="gridOptions"></div>
+			
+			    <!--  Bind the pagination component to be displayed. -->
+			    <pagination direction-links="true" boundary-links="true"
+			                total-items="posts.totalResults" items-per-page="posts.pageSize"
+			                ng-model="posts.currentPage" ng-change="refreshGrid()">
+			    </pagination>
+			    
+			    <!-- 
+			    <div>
+			        <h3>List Posts in Table</h3>
+			    </div>    
+			    <table>
+			    	<tr ng-repeat="post in posts.list">
+			    		<td>
+			    			<div>{{post.title}}</div>
+			    			<div>{{post.content}}</div>
+			    		
+			    		</td>
+			    	</tr>
+			    </table>
+			    -->
+			</div>
+		</td>
+		<td style="width:300px;padding: 0px;margin:0px;">
+			<!-- Specify a Angular controller script that binds Javascript variables to the form.-->
+			        <!-- Specify the function to be called on submit and disable HTML5 validation, since we're using Angular validation-->
+			        <form name="postForm" ng-submit="updatePost()" novalidate ng-controller="postsFormController">
+			
+			            <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
+			            <div class="form-group" ng-class="{'has-error' : postForm.name.$invalid && postForm.name.$dirty}">
+			                <label for="title">Title:</label><br/>
+			                <!-- Display a check when the field is valid and was modified -->
+			                <span ng-class="{'glyphicon glyphicon-ok' : postForm.name.$valid && postForm.name.$dirty}"></span>
+			
+			                <input id="title" name="title" type="text" class="form-control" maxlength="50"
+			                       ng-model="post.title"
+			                       required ng-minlength="2" ng-maxlength="50"/>
+			
+			                <!-- Validation messages to be displayed on required, minlength and maxlength -->
+			                <p class="help-block" ng-show="postForm.title.$error.required">Add Title.</p>
+			                <p class="help-block" ng-show="postForm.title.$error.minlength">Name must be at least 2 characters long.</p>
+			                <p class="help-block" ng-show="postForm.title.$error.maxlength">Name cannot be longer than 50 characters.</p>
+			            </div>
+						<!-- select ctegory -->
+			            <div class="form-group" ng-class="{'has-error' : postForm.name.$invalid && postForm.name.$dirty}">
+			                <label for="category">Category:</label><br/>
+							<select id="category" data-ng-options="o.categoryName for o in options track by o.id" data-ng-model="selectedCategory"></select>
+			            </div>
+			            			
+			            <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
+			            <div class="form-group" ng-class="{'has-error' : postForm.content.$invalid && postForm.content.$dirty}">
+			                <label for="content">Content:</label><br/>
+			                <!-- Display a check when the field is valid and was modified -->
+			                <span ng-class="{'glyphicon glyphicon-ok' : postForm.description.$valid && postForm.description.$dirty}"></span>
+							<!-- 
+			                <input id="content" name="content" type="text" class="form-control" maxlength="100"
+			                       ng-model="post.content"
+			                       required ng-minlength="5" ng-maxlength="100"/>
+							-->
+			                <textarea id="content" name="content" ng-model="post.content" style="width:100%; height: 350px;"></textarea>
+			                <!-- Validation messages to be displayed on required, minlength and maxlength -->
+			                <p class="help-block" ng-show="postForm.content.$error.required">Add Content.</p>
+			                <p class="help-block" ng-show="postForm.content.$error.minlength">Content must be at least 5 characters long.</p>
+			                <p class="help-block" ng-show="postForm.content.$error.maxlength">Content cannot be longer than 100 characters.</p>
+			            </div>
+			
+			            <!-- Form buttons. The 'Save' button is only enabled when the form is valid. -->
+			            <div class="buttons">
+			                <button type="button" class="btn btn-primary" ng-click="clearForm()">Clear</button>
+			                <button type="submit" class="btn btn-primary" ng-disabled="postForm.$invalid">Save</button>
+			            </div>
+			        </form>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

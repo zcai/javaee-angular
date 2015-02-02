@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!-- Declares the root element that allows behaviour to be modified through Angular custom HTML tags. -->
+<html ng-app="loginmodal">
+<head>
+    <title>javaee7-angular-post</title>
+
+    <!-- build:css css/third-party.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="lib/dependencies/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/dependencies/css/ng-grid.min.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css css/application.css -->
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <!-- endbuild -->
+
+    <!-- build:js lib/third-party.js -->
+    <!-- bower:js -->
+    <script src="lib/dependencies/jquery.min.js"></script>
+    <script src="lib/dependencies/angular.min.js"></script>
+    <script src="lib/dependencies/angular-resource.min.js"></script>
+    <script src="lib/dependencies/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="lib/dependencies/ng-grid-flexible-height.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js script/all.js -->
+    <script src="script/login.js"></script>
+    <!-- endbuild -->
+    
+    <style>
+		.gridStyle {
+		    border: 0px solid rgb(212,212,212);
+		    width: 900px;
+		    
+		} 
+
+* {
+	margin-top: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+	
+.ngRow.odd {
+  background-color: transparent;
+  border-bottom: thin dashed grey;
+}
+.ngRow.even {
+  background-color: transparent;
+  border-bottom: thin dashed grey;
+}
+.ngGrid {
+  background-color: transparent;
+}	   
+    </style>
+</head>
+
+<body>
+<table>
+<tr>
+<td>
+<h1>Java EE - Angular Application</h1>
+<!-- refer to http://stackoverflow.com/questions/18935476/angularjs-ui-modal-forms -->
+
+<div ng-controller="loginCtrl">
+
+
+    <button class="btn" ng-click="login()">login</button>
+    <button class="btn" ng-click="logout()">logout</button>
+</div>
+</td>
+</tr>
+</table>
+
+</body>
+</html>
