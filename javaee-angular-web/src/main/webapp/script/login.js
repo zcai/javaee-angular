@@ -140,11 +140,12 @@ loginApp.controller('categoryCtrl', function ($scope, $modal, $log, $sessionStor
     $scope.retriveCategory = function () {      
     	categoryService.get(function (data) {
             $scope.categories = data;
-        	//alert(JSON.stringify($scope.categories));
+            alert('xxx')
+            alert(JSON.stringify($scope.categories));
         });      
     };
     $scope.$watch('flag', function () {
-    	//alert('categories changed');
+    	alert('categories changed');
         $scope.retriveCategory();
     }, true);   
   

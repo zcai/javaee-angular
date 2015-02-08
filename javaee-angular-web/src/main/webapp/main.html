@@ -122,7 +122,8 @@ h1,h2,h3 {
 	<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css'>
 </head>
 
-<body ng-app="rootApp">
+<!-- <body ng-app="rootApp"> -->
+<body ng-app="main">
 <div ng-include="'header.html'"></div>
 <table>
 <tr>
@@ -196,7 +197,7 @@ h1,h2,h3 {
 		</td>
 	</tr>
 	<!-- view one post -->
-	<tr>
+	<tr ng-if="onePost != null">
 		<td style="width:900px;padding: 0px;margin:0px;vertical-align:top;">
 			<!-- Specify a Angular controller script that binds Javascript variables to the grid.-->
 			<div style="border: 0px solid rgb(212,212,212);width: 900px;">

@@ -1,4 +1,4 @@
-var app = angular.module('posts', ['ngResource', 'ngGrid', 'ui.bootstrap', 'textAngular']);
+var app = angular.module('main', ['ngResource', 'ngGrid', 'ui.bootstrap', 'textAngular', 'loginmodal']);
 // Create a controller with name postsListController to bind to the grid section.
 app.controller('postsViewController', function ($scope, $rootScope, $sessionStorage, $anchorScroll, $location, $http, postService, commentService) {
 	//alert(loginService.userId)
@@ -7,7 +7,7 @@ app.controller('postsViewController', function ($scope, $rootScope, $sessionStor
     $scope.posts = {currentPage: 1};
     $scope.postId2CommentCount = {};
     $scope.commentFormVisibility = {};
-    $scope.onePost = {};
+    $scope.onePost = null;
 
     // Refresh the grid, calling the appropriate rest method.
     $scope.refreshGrid = function () {
@@ -210,4 +210,4 @@ app.factory('commentService', function ($resource) {
     return $resource('resources/comments/:id');
 });
 
-var rootApp = angular.module('rootApp', ['posts', 'loginmodal']);
+//var rootApp = angular.module('rootApp', ['main', 'loginmodal']);
