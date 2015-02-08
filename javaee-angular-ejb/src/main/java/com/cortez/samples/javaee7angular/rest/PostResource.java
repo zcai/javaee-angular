@@ -66,13 +66,13 @@ public class PostResource extends Application {
                                             @QueryParam("show")
     										String show) {
     	System.out.println(show + "---------------------------------------------------------");
-    	if (show.equals("all")) {
-    	PaginatedPostListWrapper paginatedPostListWrapper = new PaginatedPostListWrapper();
-    	paginatedPostListWrapper.setCurrentPage(page);
-    	paginatedPostListWrapper.setSortFields(sortFields);
-    	paginatedPostListWrapper.setSortDirections(sortDirections);
-    	paginatedPostListWrapper.setPageSize(10);
-        return findPosts(paginatedPostListWrapper);
+	    	if (show.equals("all")) {
+	    	PaginatedPostListWrapper paginatedPostListWrapper = new PaginatedPostListWrapper();
+	    	paginatedPostListWrapper.setCurrentPage(page);
+	    	paginatedPostListWrapper.setSortFields(sortFields);
+	    	paginatedPostListWrapper.setSortDirections(sortDirections);
+	    	paginatedPostListWrapper.setPageSize(10);
+	        return findPosts(paginatedPostListWrapper);
     	}
     	else {
         	//refer to http://stackoverflow.com/questions/17991943/sqlite-how-to-select-first-n-row-of-each-group
@@ -129,6 +129,7 @@ public class PostResource extends Application {
         entityManager.remove(getPost(id));
     }
     
+    /*
     @SuppressWarnings("unchecked")
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -144,4 +145,5 @@ public class PostResource extends Application {
     	System.out.println("--------------" + query.getResultList().size());
         return findPosts(postListWrapper);
     }
+    */
 }

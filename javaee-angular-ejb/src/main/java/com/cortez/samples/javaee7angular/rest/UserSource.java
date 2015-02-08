@@ -6,8 +6,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 @Stateless
@@ -18,7 +20,8 @@ import javax.ws.rs.core.MediaType;
 public class UserSource extends Application {
     @PersistenceContext
     private EntityManager entityManager;
-
+    @Context 
+    private HttpServletRequest request;
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public User findUser( @QueryParam("password") String password, @QueryParam("userId") String userId) {

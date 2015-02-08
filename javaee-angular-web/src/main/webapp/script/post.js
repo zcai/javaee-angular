@@ -6,59 +6,8 @@ app.controller('postsListController', function ($scope, $rootScope, postService)
     $scope.sortInfo = {fields: ['id'], directions: ['asc']};
     $scope.posts = {currentPage: 1};
 
-    $scope.gridOptions = {
-    	//https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
-        data: 'posts.list',//$scope.refreshGrid is called by  $scope.$watch('sortInfo.fields[0]', function () when the page is loaded, so posts.list is already set
-        useExternalSorting: true,
-        sortInfo: $scope.sortInfo,
-        /*
-        columnDefs: [
-            { field: 'title', displayName: 'Title'},
-            { field: 'content', displayName: 'Content' },
-            { field: 'userId', displayName: 'UserId' },
-            { field: '', width: 30, cellTemplate: '<span class="glyphicon glyphicon-remove remove" ng-click="deleteRow(row)"></span>' }
-        ],
-        */
-        //refer to http://stackoverflow.com/questions/23396398/ng-grid-auto-dynamic-height
-        //grid height, not row height
-        plugins: [new ngGridFlexibleHeightPlugin()],
-        
-        //rowHeight can only be a fix value and cannot be dynamic to fit contents
-        //refer to http://stackoverflow.com/questions/26155527/how-to-set-dynamic-row-height-in-ng-grid
-        rowHeight: 200,
-        
-        headerRowHeight : 0,
-        //remove vertical bars between columns
-        //refer to http://stackoverflow.com/questions/25297110/ng-grid-with-no-vertical-bars
-        rowTemplate: '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}"><div ng-cell></div></div>',
-        
-        //add horizontal line after each row
-        //http://stackoverflow.com/questions/22805075/how-to-show-horiziontal-line-after-each-row-in-ng-grid-of-angular-js
-        /*
-        rowTemplate: '<div class="bordered">'+
-        '<div ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}">'+
-           '<div class="ngVerticalBar">&nbsp;</div>'+
-           '<div ng-cell></div>'+
-         '</div>'+
-      '</div>',  
-      */      
-        //refer to http://stackoverflow.com/questions/25126680/can-ng-grid-have-multiple-fields-in-a-single-cell-column
-        columnDefs: [
-                     { field: 'post', displayName: '', cellTemplate: '<div style="vertical-align:top;text-align:left;font-weight: bold;">{{row.entity.title}}</div><div style="font-style: italic;text-align:left;">by {{row.entity.userId}}</div><div style="vertical-align:top;text-align:left;">{{row.entity.content}}</div>'},
-                     { field: 'remove', displayName: '', width: 30, cellTemplate: '<span class="glyphicon glyphicon-remove remove" ng-click="deleteRow(row)"></span>' }
-        ],
-        multiSelect: false,
-        selectedItems: [],
-        // Broadcasts an event when a row is selected, to signal the form that it needs to load the row data.
-        afterSelectionChange: function (rowItem) {
-            if (rowItem.selected) {
-                $rootScope.$broadcast('postSelected', $scope.gridOptions.selectedItems[0].id);
-            }
-        }
-    };
+    // Refresh the grid, calling the appropriate rest method.
 
-    // Refresh the grid, calling the appropriate rest method.
-    // Refresh the grid, calling the appropriate rest method.
     $scope.refreshGrid = function () {
         var listPostsArgs = {
             page: $scope.posts.currentPage,
@@ -73,6 +22,7 @@ app.controller('postsListController', function ($scope, $rootScope, postService)
         });      
     };
 
+
     // Broadcast an event when an element in the grid is deleted. No real deletion is perfomed at this point.
     $scope.deleteRow = function (row) {
         $rootScope.$broadcast('deletePost', row.entity.id);
@@ -85,6 +35,7 @@ app.controller('postsListController', function ($scope, $rootScope, postService)
     	//alert('setinfo changed');
         $scope.refreshGrid();
     }, true);
+
 
     // Do something when the grid is sorted.
     // The grid throws the ngGridEventSorted that gets picked up here and assigns the sortInfo to the scope.

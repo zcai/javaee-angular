@@ -133,19 +133,16 @@ h1,h2,h3 {
 </tr>
 </table>
 
-<table id='bottom' style="width:1200px;" border="0">
+<table id='bottom' style="width:1200px;" border="0" ng-controller="postsViewController">
 	<tr>
 		<td style="width:900px;padding: 0px;margin:0px;vertical-align:top;">
 			<!-- Specify a Angular controller script that binds Javascript variables to the grid.-->
-			<div style="border: 0px solid rgb(212,212,212);width: 900px;" ng-controller="postsViewController">
-			    <div>
-			        <h3>List Posts</h3>
-			    </div>
+			<div style="border: 0px solid rgb(212,212,212);width: 900px;">
 			    <table style="width:100%;" border="0">
-			    	<tr ng-repeat="post in posts.list" style="border-bottom: 1px dashed grey;">
-			    		<td style="text-align:left;">
-			    			<div ng-if="showCategory(post.categoryId)" style="background-color:red;">{{post.categoryId}}</div><br/>
-			    			<div id="{{post.id}}_title" style="font-family: Times New Roman; font-size: 24px; color: #140840">{{post.title}}</div>
+			    	<tr ng-repeat="post in posts.list">
+			    		<td style="text-align:left;" style="border-bottom: 0px dashed grey;">
+			    			<div ng-if="showCategory(post.categoryId)" style="background-color:#AEAEA1;">{{post.categoryId}}</div><br/>
+			    			<div id="{{post.id}}_title" style="font-family: Times New Roman; font-size: 24px; color: #140840"><a ng-click="viewPost(post.id);">{{post.title}}</a></div>
 			    			<div>By {{post.userId}}</div>
 			    			<div ng-show="contentVisibility">{{post.content}}</div>
 			    			<div ng-hide="contentVisibility">{{post.content | cut:true:100:' ...'}}</div>
@@ -198,6 +195,63 @@ h1,h2,h3 {
 
 		</td>
 	</tr>
+	<!-- view one post -->
+	<tr>
+		<td style="width:900px;padding: 0px;margin:0px;vertical-align:top;">
+			<!-- Specify a Angular controller script that binds Javascript variables to the grid.-->
+			<div style="border: 0px solid rgb(212,212,212);width: 900px;">
+			    <table style="width:100%;" border="0">
+			    	<tr>
+			    		<td style="text-align:left;" style="border-bottom: 0px dashed grey;">
+			    			<div id="{{onePost.id}}_title" style="font-family: Times New Roman; font-size: 24px; color: #140840">{{onePost.title}}</div>
+			    			<div>By {{onePost.userId}}</div>
+			    			<div>{{onePost.content}}</div>
+			    			<table id="{{onePost.id}}_operation" style="width:100%;" border="0">
+			    				<tr>
+
+			    					<td style="width:120px;">
+			    						<!-- <div><a href="#" ng-click="scrollTo(post.id+'_commentform');selectedPost(post.id);">write comment</a></div> -->
+			    						<!-- must delete href=#" to make scroll work -->
+			    						<div><a style="cursor:pointer;" ng-click="scrollTo(onePost.id+'_commentform');selectedPost(onePost.id);">write comment</a></div>
+			    					</td>
+			    					<td>
+			    						<div ng-hide="commentVisibility"><a style="cursor:pointer;" ng-click="viewComments(onePost.id);commentVisibility = ! commentVisibility;scrollTo(onePost.id+'_operation');">view comments({{postId2CommentCount[onePost.id]}})</a></div>
+			    						<div ng-show="commentVisibility"><a style="cursor:pointer;" ng-click="hideComments(onePost.id);commentVisibility = ! commentVisibility">hide comments</a></div>
+			    					</td>
+			    				</tr>
+			    			</table>
+							<!-- show comments here -->
+							<div id="{{onePost.id}}" style="width:100%;"></div>
+					        <form id="{{onePost.id}}_commentform" ng-show="commentFormVisibility[onePost.id]" name="commentForm" ng-submit="addComment()" novalidate>				
+					            <div class="form-group" ng-class="{'has-error' : commentForm.content.$invalid && commentForm.content.$dirty}">
+					                <span ng-class="{'glyphicon glyphicon-ok' : commentForm.content.$valid && commentForm.content.$dirty}"></span>
+									<input type="hidden" ng-model="comment.postId"/><br/>
+									<!-- 
+					                <textarea id="content" name="content" ng-model="comment.content" style="width:100%; height: 350px;"></textarea>
+					                <p class="help-block" ng-show="commentForm.content.$error.required">Add Content.</p>
+					                <p class="help-block" ng-show="commentForm.content.$error.minlength">Content must be at least 5 characters long.</p>
+					                <p class="help-block" ng-show="commentForm.content.$error.maxlength">Content cannot be longer than 100 characters.</p>
+					            	-->
+					            </div>
+					            <div text-angular ng-model="comment.content" ta-toolbar="[['bold','underline','italics','undo','redo', 'quote','p','pre','ul','ol', 'insertImage','insertLink','unlink']]"></div>
+					            <div class="buttons">
+					                <button type="submit" class="btn btn-primary" ng-disabled="commentForm.$invalid" ng-click="commentFormVisibility[onePost.id] = ! commentFormVisibility[onePost.id]">Save</button>
+					                <button type="button" class="btn btn-primary" ng-disabled="commentForm.$invalid" ng-click="commentFormVisibility[onePost.id] = ! commentFormVisibility[onePost.id]">Cancel</button>
+					            </div>
+					        </form>
+
+			    			<br/>
+			    		</td>
+			    	</tr>
+			    </table>
+
+			</div>
+
+		</td>
+		<td style="width:300px;padding: 0px;margin:0px;">
+
+		</td>
+	</tr>	
 </table>
 </body>
 </html>

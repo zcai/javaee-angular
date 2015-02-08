@@ -7,6 +7,7 @@ app.controller('postsViewController', function ($scope, $rootScope, $sessionStor
     $scope.posts = {currentPage: 1};
     $scope.postId2CommentCount = {};
     $scope.commentFormVisibility = {};
+    $scope.onePost = {};
 
     // Refresh the grid, calling the appropriate rest method.
     $scope.refreshGrid = function () {
@@ -15,7 +16,7 @@ app.controller('postsViewController', function ($scope, $rootScope, $sessionStor
             };
         postService.get(listPostsArgs, function (data) {
             $scope.posts = data;
-        	alert(JSON.stringify($scope.posts));
+        	//alert(JSON.stringify($scope.posts));
             
             //count comments for each post and store results in $scope.postId2CommentCount
             for (var i = 0; i < $scope.posts.list.length; i++) {
@@ -57,6 +58,20 @@ app.controller('postsViewController', function ($scope, $rootScope, $sessionStor
     // Broadcast an event when an element in the grid is deleted. No real deletion is perfomed at this point.
     $scope.selectRow = function (row) {
         $rootScope.$broadcast('postSelected', row.entity.id);
+    };
+    
+    $scope.viewPost = function (postId) {
+    	alert(postId)
+        var listPostsArgs = {
+            id: postId
+        };
+        //alert('xxx');
+        
+        postService.get(listPostsArgs, function (data) {
+            $scope.onePost = data;
+        	alert(JSON.stringify($scope.onePost));
+        	$scope.posts = {};
+        });      
     };
     // Picks up the event broadcasted when the post is selected from the grid and perform the post load by calling
     // the appropiate rest service.
